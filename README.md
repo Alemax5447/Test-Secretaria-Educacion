@@ -1,3 +1,27 @@
+1. Descripción general
+   Este proyecto implementa un sistema de extracción de datos desde credenciales oficiales usando IA multimodal, con un backend en Laravel y un frontend en Angular 20.
+   La IA analiza imágenes de credenciales, extrae campos relevantes (por ejemplo: nombre, CURP y fecha de nacimiento) y los almacena en una base de datos para su posterior consulta.
+   La solución está pensada para demostración funcional, pruebas técnicas y evaluación de uso real de inteligencia artificial.
+
+2. Arquitectura general
+
+[ Angular 20 ]
+  |
+  v
+[ HTTP (REST) ]
+  |
+  v
+[ Laravel API ]
+  |
+  v
+IA multimodal (GEMINI GOOGLE)
+  |
+  v
+[ Servicio de IA ]
+  |
+  v
+[ Base de Datos ]
+
 ## Endpoints de la API y ejemplos de uso
 
 Estas son las rutas principales disponibles para consumir desde el frontend (por ejemplo, con Angular, Postman, etc.):
