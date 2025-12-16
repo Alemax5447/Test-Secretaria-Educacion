@@ -6,20 +6,20 @@
 2. Arquitectura general
 
 [ Angular 20 ]
-|
-v
+  |
+  v
 [ HTTP (REST) ]
-|
-v
+  |
+  v
 [ Laravel API ]
-|
-v
+  |
+  v
 IA multimodal (GEMINI GOOGLE)
-|
-v
+  |
+  v
 [ Servicio de IA ]
-|
-v
+  |
+  v
 [ Base de Datos ]
 
 ## Endpoints de la API y ejemplos de uso
@@ -131,15 +131,12 @@ Estas son las rutas principales disponibles para consumir desde el frontend (por
     php artisan key:generate
     ```
 5. Ejecuta las migraciones para crear las tablas:
-
     ```bash
     php artisan migrate
     ```
-
     ```
 
     ```
-
 6. Inicia el servidor de desarrollo:
     ```bash
     php artisan serve
