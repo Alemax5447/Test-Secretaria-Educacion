@@ -123,4 +123,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'aliases' => [
+        // ...otros aliases de Laravel...
+        'Image' => Intervention\Image\Facades\Image::class,
+    ],
 ];
