@@ -10,11 +10,20 @@ use App\Models\Empleado;
 
 class EmpleadoOcrController extends Controller
 {
+    // Obtiene todos los empleados
+    public function getEmpleados()
+    {
+        $empleados = Empleado::all();
+        return response()->json([
+            'success' => true,
+            'data' => $empleados
+        ]);
+    }
     /**
      * Procesa una imagen de credencial usando Gemini 2.5 Flash (Free Tier)
      * para extraer datos estructurados y guardarlos en la base de datos.
      */
-    public function procesarCredencial(Request $request)
+    public function postProcesarCredencial(Request $request)
     {
         // 1. Validación básica de la imagen
         $request->validate([
@@ -121,14 +130,26 @@ class EmpleadoOcrController extends Controller
             }
 
             // 6. Guardar en la tabla empleados (usando las claves del Schema)
-            $empleado = Empleado::create([
-                'nombre' => $datosExtraidos['nombre'],
-                'apellidos' => $datosExtraidos['apellidos'],
-                'curp' => $datosExtraidos['curp'],
-                'estado' => $datosExtraidos['estado'] ?? null,
-                'municipio' => $datosExtraidos['municipio'] ?? null,
-                'localidad' => $datosExtraidos['localidad'] ?? null,
-            ]);
+
+            try {
+                $empleado = Empleado::create([
+                    'nombre' => $datosExtraidos['nombre'],
+                    'apellidos' => $datosExtraidos['apellidos'],
+                    'curp' => $datosExtraidos['curp'],
+                    'estado' => $datosExtraidos['estado'],
+                    'municipio' => $datosExtraidos['municipio'],
+                    'localidad' => $datosExtraidos['localidad'],
+                ]);
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() == 23000) { // Código SQLSTATE para violación de restricción única
+                    return response()->json([
+                        'success' => false,
+                        'error' => 'El empleado con esa CURP ya existe.',
+                        'detalle_bd' => $e->getMessage()
+                    ], 409);
+                }
+                throw $e;
+            }
 
             return response()->json([
                 'success' => true,
@@ -146,10 +167,22 @@ class EmpleadoOcrController extends Controller
             ], 500);
         }
     }
-
-    // Función de prueba
-    public function test()
+     /**
+     * Elimina un empleado por su id.
+     */
+    public function deleteEmpleado($id)
     {
-        return response()->json(['ok' => true, 'message' => 'Controlador EmpleadoOcrController funcionando.']);
+        $empleado = Empleado::where('id_empleado', $id)->first();
+        if (!$empleado) {
+            return response()->json([
+                'success' => false,
+                'mensaje' => 'Empleado no encontrado.'
+            ], 404);
+        }
+        $empleado->delete();
+        return response()->json([
+            'success' => true,
+            'mensaje' => 'Empleado eliminado correctamente.'
+        ]);
     }
 }
